@@ -1,0 +1,7 @@
+# Core dependencies
+garak>=0.9.0.15
+pyyaml>=6.0
+requests>=2.31.0
+
+# Development dependencies 
+pytest>=7.4.0
