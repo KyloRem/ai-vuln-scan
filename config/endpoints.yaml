@@ -1,0 +1,57 @@
+# Config for NVIDIA's garak llm vuln scanner
+# Define model serving endpoints to scan for vulns. Based on OWASP LLM Top 10.
+# This config:
+  # Lists which model serving endpoints to scan
+  # Tags each garak probe with an OWASP LLM Top 10 reference
+  # Controls how the scan runs with scan_settings
+
+endpoints:
+  - name: "Hugging Face GPT2 Inference API"
+    type: "huggingface"
+    model: "openai-community/gpt2"
+    enabled: true
+    description: "Public HuggingFace inference endpoint for GPT-2. Beginning here since auth not required"
+
+# Add more endpoints here as you'd like
+# - name: "Endpoint A"
+#   type: "openai"
+#   url: "https://api.example.com/v1"
+#   model: "model-name"
+#   enabled: true
+
+# Config for garak probes mapped to OWASP LLM TOP 10
+probes:
+  # LLM01: Prompt Injection
+  - name: "promptinject"
+    enabled: true
+    owasp_tag: "LLM01"
+  
+  # LLM02: Insecure Output Handling
+  - name: "xss"
+    enabled: true
+    owasp_mapping: "LLM02"
+  
+  # LLM03: Training Data Poisoning (limited testing capability)
+  - name: "knownbadsignatures"
+    enabled: true
+    owasp_mapping: "LLM03"
+  
+  # LLM06: Sensitive Information Disclosure
+  - name: "leakreplay"
+    enabled: true
+    owasp_mapping: "LLM06"
+  
+  - name: "packagehallucination"
+    enabled: true
+    owasp_mapping: "LLM06"
+  
+  # LLM07: Insecure Plugin Design
+  - name: "malwaregen"
+    enabled: true
+    owasp_mapping: "LLM07"
+
+# Scan settings
+scan_settings:
+  generations: 5
+  parallel: false
+  output_dir: "results"
