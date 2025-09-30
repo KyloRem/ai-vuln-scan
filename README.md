@@ -18,12 +18,15 @@ Automated vulnerability scanning for AI endpoints using [garak](https://github.c
 ### Installation
 
 1. Clone the repository
+
 ```bash git clone https://github.com/kylorem/ai-vuln-scan.git```
 
 2. Create a virtual environment
+
 ```bash python3 -m venv venv source venv/bin/activate```
 
 3. Install dependencies
+  
 ```pip install -r requirements.txt```
 
 ## Configuration
