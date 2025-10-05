@@ -108,7 +108,7 @@ class ConfigLoader:
         probes = self.config.get('probes', [])
 
         # Filter for only enabled probes. Same as endpoints
-        return[for probe in probes if probe.get('enabled', Fasle)]
+        return [probe for probe in probes if probe.get('enabled', False)]
 
 
     def get_scan_settings(self) -> Dict[str, Any]:
