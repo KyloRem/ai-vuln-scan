@@ -29,6 +29,7 @@ class ConfigLoader:
         # Load the config file immediately when the object is created
         self._load_config()
 
+
     def _load_config(self) -> None:
         """
         Load configuration from YAML file
@@ -57,3 +58,101 @@ class ConfigLoader:
         
         # After loading, validate that required sections are present
         self._validate_config()
+
+
+    def _validate_config(self) -> None:
+        """
+        Validate that required configuration sections exist
+        This ensures the config file has the structure we expect
+        """
+        # List of sections that MUST be in the config file
+        required_sections = ['endpoints', 'probes', 'scan_settings']
+
+        #Loop through each required section
+        for section in required_sections:
+            # Check if the section exists in the loaded config
+            if section not in self.config: 
+                # If missing, raise an error
+                raise ValueError(
+                    f"Missing required section '{section}' in config file"
+                )
+
+    
+    def get_enabled_endpoints(self) -> List[Dict[str, Any]]:
+        """
+        Get list of enabled endpoints
+        Filters out any endpoints where enabled=False
+        
+        Returns:
+            List of endpoint configurations where enabled=True
+            Each endpoint is a dictionary with keys like 'name', 'type', 'model', etc.
+            """
+        # Get the 'endpoints' section
+        endpoints = self.config.get('endpoints',[])
+
+        # List comprehension: filter to only include endpoints where enabled is True
+        # ep.get('enabled', False) means: get the 'enabled' value, default to False if missing
+        return [ep for ep in endpoints if ep.get('enabled', False)]
+
+    
+    def get_enabled_probes(self) -> List[Dict[str, Any]]:
+        """
+        Get a list of the enabled garak probes
+        Filters out any probes where enabled=False
+
+        Returns:
+            List of probe configurations where enabled=True
+            Each probe is a dictionary with keys like 'name', owasp_mapping', etc.
+        """
+        # Get the 'probes' section
+        probes = self.config.get('probes', [])
+
+        # Filter for only enabled probes. Same as endpoints
+        return[for probe in probes if probe.get('enabled', Fasle)]
+
+
+    def get_scan_settings(self) -> Dict[str, Any]:
+        """
+        Get scan settings 
+        Returns the entire scan_settings section from the config
+
+        Returns:
+            Dictionary of scan settings (generations, parallel, output_dir, etc.)
+        """
+        # Get the 'scan_settings' section 
+        return self.config.get('scan_settings',{})
+    
+
+    def get_probe_names(self) -> List[str]:
+        """
+        Get list of enabled garak probe names
+        Extracts onle the 'name' field from each enabled probe
+        This is what we'll pass to garak when running scans
+
+        Returns:
+            List of probe names as strings (e.g. ['promptinject', 'xss', etc.])
+        """
+        # Get all enabled probes (returns a list of dictionaries)
+        probes = self.get_enabled_probes()
+
+        # Extract just the 'name' field from each probe dictionary
+        # This is a list comprehension that transforms the list
+        return [probe['name'] for probe in probes]
+    
+
+# Convenience function for quick loading
+# Reads like a more natural command (e.g. config = load_config() reads better than config = ConfigLoader())
+def load_config(config_path: str = "config/endpoints.yaml") -> ConfigLoader:
+    """
+    Load configuration from file
+    Helper function so you can load the config in one line
+    Instead of: config = ConfigLoader("config/endpoints.yaml")
+    You can do: config = load_config()
+    
+    Args:
+        config_path: Path to configuration file
+        
+    Returns:
+        Config Loader instance (an object with all our config data)
+    """
+    return ConfigLoader(config_path)
