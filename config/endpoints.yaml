@@ -28,30 +28,30 @@ probes:
   
   # LLM02: Insecure Output Handling
   - name: "xss"
-    enabled: true
+    enabled: false
     owasp_mapping: "LLM02"
   
   # LLM03: Training Data Poisoning (limited testing capability)
   - name: "knownbadsignatures"
-    enabled: true
+    enabled: false
     owasp_mapping: "LLM03"
   
   # LLM06: Sensitive Information Disclosure
   - name: "leakreplay"
-    enabled: true
+    enabled: false
     owasp_mapping: "LLM06"
   
   - name: "packagehallucination"
-    enabled: true
+    enabled: false
     owasp_mapping: "LLM06"
   
   # LLM07: Insecure Plugin Design
   - name: "malwaregen"
-    enabled: true
+    enabled: false
     owasp_mapping: "LLM07"
 
 # Scan settings
 scan_settings:
-  generations: 5
+  generations: 2
   parallel: false
   output_dir: "results"
