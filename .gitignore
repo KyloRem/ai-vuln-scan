@@ -29,3 +29,6 @@ Thumbs.db
 results/
 reports/
 *.log
+test_config.py
+venv
+test_scanner.py
